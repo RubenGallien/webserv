@@ -1,4 +1,6 @@
-FILES = main.cpp
+FILES = main.cpp \
+	Server.cpp \
+	Utils/Signal.cpp
 
 VERSION = -std=c++98
 
@@ -13,5 +15,5 @@ DELETE = rm
 all:
 	$(CLANG) $(VERSION) $(FLAGS) -o $(TARGET) $(FILES)
 
-clean:
+fclean:
 	$(DELETE) $(TARGET)
