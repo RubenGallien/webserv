@@ -5,17 +5,7 @@ int main()
 {
     int socketFD;
     sockaddr_in serverAddress = {AF_INET, htons(PORT), {INADDR_ANY}, {0}};
-    // char buffer[1024];
-    
-    std::ifstream src("./files/default.html");
-    std::string dest;
-    std::string line;
 
-    if (src.is_open())
-    {
-        while (getline(src, line))
-            dest += line + '\n';
-    }
 
     socketFD = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (socketFD == -1)

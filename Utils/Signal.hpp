@@ -14,5 +14,6 @@ class Signal {
 		~Signal();
 		void init_signal(int writeFd);
 		int getReadFd();
+		void closePipe();
 	
 };

@@ -14,13 +14,17 @@ Signal::Signal()
 
 void signal_handler(int signal)
 {
-	std::cout << "I detect signal : " << signal << std::endl;
 	if (signal == 2)
 	{
 		write(g_writePipeFd, "2", 1);
 	}
 }
 
+void Signal::closePipe()
+{
+	close(this->writePipeFd);
+	close(this->readPipeFd);
+}
 
 void Signal::init_signal(int writeFd)
 {

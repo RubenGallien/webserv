@@ -11,7 +11,3 @@
 #include <sys/epoll.h>
 #include <fcntl.h>
 #include <sys/socket.h>
-
-
-#define PORT 8888
-#define MAX_EVENTS 10

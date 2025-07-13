@@ -1,5 +1,7 @@
 FILES = main.cpp \
 	Server.cpp \
+	Socket.cpp \
+	Epoll.cpp \
 	Utils/Signal.cpp
 
 VERSION = -std=c++98
