@@ -6,8 +6,6 @@
 int main()
 {
 
-	return (0);
-
 	Signal signal;
 	Server *server = new Server(signal.getReadFd());
 

@@ -8,7 +8,7 @@ VERSION = -std=c++98
 
 CLANG = c++
 
-FLAGS = -Werror -Wall -Wextra
+FLAGS = -Werror -Wall -Wextra -g
 
 TARGET = webserv
 

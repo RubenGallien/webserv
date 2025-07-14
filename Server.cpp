@@ -17,7 +17,6 @@ bool Server::run()
 	{
 		if (!this->epoll.actions(this->epoll.wait()))
 		{
-			close(this->socket.getSocketListenerFd());
 			close(this->epoll.getEpfd());
 			return false;
 		}

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <errno.h>
 
-#define PORT 7988
+#define PORT 8888
 
 class Socket {
     
