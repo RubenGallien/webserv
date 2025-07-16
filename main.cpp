@@ -9,8 +9,7 @@ int main()
 	Signal signal;
 	Server *server = new Server(signal.getReadFd());
 
-	if (!server->run())
-		signal.closePipe();
+	server->run();
 
 	delete server;
 }

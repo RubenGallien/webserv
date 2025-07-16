@@ -24,8 +24,8 @@ int Epoll::epollAccept()
     struct sockaddr_in peer_addr;
     socklen_t peer_addr_size = sizeof(peer_addr);
     this->acceptFd = accept(this->socketListenerFd, (struct sockaddr*)&peer_addr, &peer_addr_size);
-    ev.events = EPOLLIN;
-    ev.data.fd = this->acceptFd;
+    this->ev.events = EPOLLIN;
+    this->ev.data.fd = this->acceptFd;
     epoll_ctl(this->epfd, EPOLL_CTL_ADD, this->acceptFd, &ev);
     this->allFds.push_back(acceptFd);
     return (0);

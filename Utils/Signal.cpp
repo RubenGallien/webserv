@@ -1,6 +1,6 @@
 #include "Signal.hpp"
 
-int g_writePipeFd = -1;
+int g_writePipeFd;
 
 Signal::Signal()
 {
@@ -20,12 +20,6 @@ void signal_handler(int signal)
 	}
 }
 
-void Signal::closePipe()
-{
-	close(this->writePipeFd);
-	close(this->readPipeFd);
-}
-
 void Signal::init_signal(int writeFd)
 {
 	g_writePipeFd = writeFd;
@@ -39,5 +33,7 @@ int Signal::getReadFd()
 
 Signal::~Signal()
 {
+	close(this->writePipeFd);
+	close(this->readPipeFd);
 	std::cout << "Destroy Signal instance" << std::endl;
 }
