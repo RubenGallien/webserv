@@ -60,6 +60,7 @@ int Epoll::actions(int nbs)
                 std::cout << this->events[i].data.fd << ":\n" << buffer << std::endl;
             else
             {
+                std::cout << this->events[i].data.fd << " disconnected" << std::endl;
                 close(this->events[i].data.fd);
                 epoll_ctl(this->epfd, EPOLL_CTL_DEL, this->acceptFd, &this->ev);
             }
