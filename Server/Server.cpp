@@ -1,15 +1,22 @@
 #include "Server.hpp"
 
 
-Server::Server(int readSignalFd) : socket(), epoll(readSignalFd, this->socket.getSocketListenerFd())
+Server::Server(int readSignalFd) : 
+socket(), 
+clientManager(), 
+epoll(readSignalFd, this->socket.getSocketListenerFd(), this->clientManager)
 {
 	std::cout << "Server instance created" << std::endl;
 }
 
+/**
+* Main loop
+ */
 bool Server::run()
 {
 	for (;;)
 	{
+		// wait an event -> do something when happen
 		if (!this->epoll.actions(this->epoll.wait()))
 			return false;
 	}

@@ -2,6 +2,8 @@ FILES = main.cpp \
 	Server/Server.cpp \
 	Server/Socket.cpp \
 	Server/Epoll.cpp \
+	Server/ClientManager.cpp \
+	Server/Client.cpp \
 	Utils/Signal.cpp
 
 VERSION = -std=c++98

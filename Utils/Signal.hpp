@@ -1,3 +1,6 @@
+#ifndef SIGNAL_HPP
+#define SIGNAL_HPP
+
 #include "../includes/includes.hpp"
 #include <csignal>
 
@@ -16,3 +19,5 @@ class Signal {
 		int getReadFd();
 	
 };
+
+#endif
