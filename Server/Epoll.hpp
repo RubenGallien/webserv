@@ -28,11 +28,9 @@ class Epoll {
         int readSignalFd;
         int socketListenerFd;
         ClientManager& clientManager;
-        std::vector<int>allFds;
         int epfd;
         int acceptFd;
         int epollAccept();
-        void ft_close();
         struct epoll_event ev;
         struct epoll_event events[MAX_EVENTS];
 };

@@ -11,6 +11,11 @@ Client::Client(int fd)
     std::cout << "Wow a new client happens" << std::endl;
 }
 
+int Client::getFd()
+{
+    return this->fd;
+}
+
 Client::~Client()
 {
     std::cout << "A client leave the room" << std::endl;

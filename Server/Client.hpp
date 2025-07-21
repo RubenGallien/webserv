@@ -9,7 +9,7 @@ class Client
         Client();
         Client(int fd);
         ~Client();
-
+        int getFd();
     private:
         int fd;
 
