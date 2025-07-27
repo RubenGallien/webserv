@@ -57,15 +57,29 @@ int Epoll::actions(int nbs)
             std::cout << "Client want to connect " << std::endl;
             if (this->epollAccept() == -1)
                 return (0);
-            this->clientManager.showClients();
+            // this->clientManager.showClients();
         }
         else
         {
-            int resp;
-            std::cout << "Client talk to me " << std::endl;
-            resp = this->clientManager.showClientRequest(this->events[i].data.fd);
-            if (!resp)
-                epoll_ctl(this->epfd, EPOLL_CTL_DEL, this->events[i].data.fd, &this->ev);
+            std::cout << "Somemthing happen from " << this->events[i].data.fd << std::endl;
+            if (this->ev.events == EPOLLIN)
+            {
+                std::cout << "He's ready to be read" << std::endl;
+                int resp;
+                resp = this->clientManager.showClientRequest(this->events[i].data.fd);
+                if (!resp)
+                    epoll_ctl(this->epfd, EPOLL_CTL_DEL, this->events[i].data.fd, &this->ev);
+                else
+                {
+                    this->ev.events = EPOLLOUT;
+                    epoll_ctl(this->epfd, EPOLL_CTL_MOD, this->events[i].data.fd,&this->ev);
+                }
+            }
+            else if (this->ev.events == EPOLLOUT)
+            {
+                std::cout <<  this->events[i].data.fd << " is ready to be write " << std::endl;
+            }
+
         }
     }
     return (1);
