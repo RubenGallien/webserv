@@ -18,7 +18,7 @@ class ClientManager {
         void showClients();
         int showClientRequest(int fd);
     private:
-        std::map<int, Client *> clients;
+        std::map<int, Client *> _clients;
 
 };
 
