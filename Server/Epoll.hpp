@@ -20,7 +20,7 @@
 class Epoll {
 
     public:
-        Epoll(int readSignalFd, int socketListenerFd, ClientManager& clientManager);
+        Epoll(const int readSignalFd, int socketListenerFd, ClientManager& clientManager);
         ~Epoll();
         int wait();
         int actions(int nbs);

@@ -15,8 +15,8 @@ class ClientManager {
         ClientManager();
         ~ClientManager();
         void addClient(int fd);
+        void manageRequest(int fd);
         void showClients();
-        int showClientRequest(int fd);
     private:
         std::map<int, Client *> _clients;
 

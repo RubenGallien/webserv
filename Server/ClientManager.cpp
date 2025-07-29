@@ -20,18 +20,29 @@ void ClientManager::showClients()
     }
 }
 
-int ClientManager::showClientRequest(int fd)
+void ClientManager::manageRequest(int fd)
 {
     char buffer[1024];
-    
-    int clientfd = this->_clients[fd]->getFd();
-    int bytes = recv(clientfd, &buffer, 1024, 0);
-    if (bytes)
-        std::cout << buffer << std::endl;
-    else
-        return (0);
-    return (1);
+    int bytes = recv(fd, &buffer, 1024, 0);
+    if (!this->_clients[fd]->getReq() && bytes)
+    {
+        HTTPRequest * newRequest = new HTTPRequest(buffer);
+        this->_clients[fd]->setReq(newRequest);
+    }
 }
+
+// int ClientManager::showClientRequest(int fd)
+// {
+//     char buffer[1024];
+    
+//     int clientfd = this->_clients[fd]->getFd();
+//     int bytes = recv(clientfd, &buffer, 1024, 0);
+//     if (bytes)
+//         std::cout << buffer << std::endl;
+//     else
+//         return (0);
+//     return (1);
+// }
 
 
 ClientManager::~ClientManager()

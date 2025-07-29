@@ -3,6 +3,7 @@ FILES = main.cpp \
 	Server/Socket.cpp \
 	Server/Epoll.cpp \
 	Server/ClientManager.cpp \
+	Server/HTTPRequest.cpp \
 	Server/Client.cpp \
 	Utils/Signal.cpp
 

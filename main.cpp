@@ -1,7 +1,7 @@
 #include "./includes/includes.hpp"
 #include "./Server/Server.hpp"
 #include "./Utils/Signal.hpp"
-
+#include "./Server/HTTPRequest.hpp"
 
 int main()
 {

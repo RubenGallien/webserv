@@ -50,52 +50,27 @@ int Epoll::actions(int nbs)
 {
     for (int i = 0; i < nbs ; i++)
     {
-        if (this->_events[i].data.fd == this->_readSignalFd)
+        int target_fd =this->_events[i].data.fd;
+        if (target_fd == this->_readSignalFd)
             return(0);
-        else if (this->_events[i].data.fd == this->_socketListenerFd)
+        else if (target_fd == this->_socketListenerFd)
         {
             if (this->epollAccept() == -1)
                 return (0);
         }
         else // client want tell something
         {
-            if (this->_ev.events == EPOLLIN) // client send a request
+            switch (this->_ev.events)
             {
-                int resp;
-                resp = this->_clientManager.showClientRequest(this->_events[i].data.fd);
-                std::cout << "bytes receveid = " << resp << std::endl;
-                if (!resp)
-                    epoll_ctl(this->_epfd, EPOLL_CTL_DEL, this->_events[i].data.fd, &this->_ev);
-                else
-                {
-                    this->_ev.events = EPOLLOUT;
-                    epoll_ctl(this->_epfd, EPOLL_CTL_MOD, this->_events[i].data.fd,&this->_ev);
-                }
+                case EPOLLIN:
+                    this->_clientManager.manageRequest(target_fd);
+                    break;
+                case EPOLLOUT:
+                    /* code*/
+                default:
+                    std::cout << "ni EPOLLIN ni EPOLLOUT" << std::endl;
+                    break;
             }
-            else if (this->_ev.events == EPOLLOUT) // client is ready to write
-            {
-                char resp[2048];
-                std::string content;
-                std::string buffer;
-
-                content.append(
-                    "HTTP/1.1 200 OK\nContent-Length: 615\nConnection: close\n\n"
-                );
-                std::ifstream file ("www/index.html", std::ifstream::in);
-                while (std::getline(file, buffer))
-                {
-                    content.append(buffer);
-                    content.append("\n");
-                }
-                std::cout << content << std::endl;
-                std::memcpy(resp, content.c_str(), content.size());
-                send(this->_events[i].data.fd, &resp, content.size(), MSG_CONFIRM);
-                epoll_ctl(this->_epfd, EPOLL_CTL_DEL, this->_events[i].data.fd, &this->_ev);
-                this->_ev.events = EPOLLIN;
-                epoll_ctl(this->_epfd, EPOLL_CTL_MOD, this->_events[i].data.fd,&this->_ev);
-                file.close();
-            }
-
         }
     }
     return (1);
