@@ -13,7 +13,7 @@ class Client
         ~Client();
         int getFd();
         HTTPRequest * getReq();
-        void setReq(HTTPRequest * req);
+        void setReq(std::string buffer, size_t bytes);
     private:
         int fd;
         HTTPRequest * _req;

@@ -11,13 +11,17 @@ class HTTPRequest
 {
 
     private:
+        size_t      _bytesBuffer;
+        std::string _buffer;
         std::string _method;
         std::string _path;
         std::string _version;
         std::map<std::string, std::string> _fields;
     public:
         HTTPRequest();
-        HTTPRequest(std::string req);
+        HTTPRequest(std::string req, size_t bytes);
+        void extend(std::string buffer, size_t bytes);
+        std::string getBuffer();
         ~HTTPRequest();
 
 };

@@ -17,9 +17,10 @@ int Client::getFd()
     return this->fd;
 }
 
-void Client::setReq(HTTPRequest * req)
+void Client::setReq(std::string buffer, size_t bytes)
 {
-    this->_req = req;
+    HTTPRequest * newRequest = new HTTPRequest(buffer, bytes);
+    this->_req = newRequest;
 }
 
 HTTPRequest * Client::getReq()

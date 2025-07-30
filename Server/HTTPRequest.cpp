@@ -5,28 +5,24 @@ HTTPRequest::HTTPRequest()
     return;
 }
 
-HTTPRequest::HTTPRequest(std::string req)
+HTTPRequest::HTTPRequest(std::string req, size_t bytes)
 {
     std::cout << req << std::endl;
- 
+    this->_bytesBuffer = bytes;
+    this->_buffer = req;
     std::cout << "Create an HTTP Request" << std::endl;
 }
 
+void HTTPRequest::extend(std::string buffer, size_t bytes)
+{
+    this->_buffer += buffer;
+    this->_bytesBuffer += bytes;
+}
 
-// HTTPRequest::HTTPRequest(std::string req)
-// {
-//     std::string start_line(req.substr(0, req.find("\n")));
-//     std::istringstream f(start_line);
-
-//     std::string method, path, version;
-//     f >> method >> path >> version;
-//     this->_method = method;
-//     this->_path = path;
-//     this->_version = version;
- 
-//     std::cout << "Create an HTTP Request" << std::endl;
-// }
-
+std::string HTTPRequest::getBuffer()
+{
+    return this->_buffer;
+}
 
 HTTPRequest::~HTTPRequest()
 {

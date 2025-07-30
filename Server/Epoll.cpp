@@ -63,8 +63,11 @@ int Epoll::actions(int nbs)
             switch (this->_ev.events)
             {
                 case EPOLLIN:
-                    this->_clientManager.manageRequest(target_fd);
+                {
+                    if (!this->_clientManager.manageRequest(target_fd))
+                        epoll_ctl(this->_epfd, EPOLL_CTL_DEL, target_fd, &this->_ev);
                     break;
+                }
                 case EPOLLOUT:
                     /* code*/
                 default:
