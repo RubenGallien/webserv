@@ -21,6 +21,7 @@ class HTTPRequest
         HTTPRequest();
         HTTPRequest(std::string req, size_t bytes);
         void extend(std::string buffer, size_t bytes);
+        int hasReadyToPrepare();
         std::string getBuffer();
         ~HTTPRequest();
 

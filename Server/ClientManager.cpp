@@ -20,22 +20,25 @@ void ClientManager::showClients()
     }
 }
 
-int ClientManager::manageRequest(int fd)
+int ClientManager::manageClientRequest(int fd)
 {
     char buffer[1024];
     int bytes = recv(fd, &buffer, 1024, 0);
     buffer[bytes] = '\0';
+
+    if (!bytes)
+        return (std::cout << fd << " leave " << std::endl, close(fd), 0);
+    
     Client * client = this->getClient(fd);
     HTTPRequest * existingRequest = client->getReq();
-    if (!existingRequest && bytes)
-        client->setReq(buffer, bytes);
-    else if (bytes)
+    if (!existingRequest)
     {
-        existingRequest->extend(buffer, bytes);
-        std::cout << existingRequest->getBuffer() << std::endl;
+        client->setReq(buffer, bytes);
+        existingRequest = client->getReq();
     }
     else
-        return (std::cout << "Je m'en vais" << std::endl, close(fd), 0);
+        existingRequest->extend(buffer, bytes);
+    std::cout << existingRequest->hasReadyToPrepare() << std::endl;
     return (1);
 }
 

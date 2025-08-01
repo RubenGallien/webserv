@@ -15,7 +15,7 @@ class ClientManager {
         ClientManager();
         ~ClientManager();
         void addClient(int fd);
-        int manageRequest(int fd);
+        int manageClientRequest(int fd);
         void showClients();
         Client * getClient(int fd);
     private:

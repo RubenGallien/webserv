@@ -9,7 +9,7 @@ Client::Client(int fd)
 {
     this->fd = fd;
     this->_req = NULL;
-    std::cout << "Wow a new client happens" << std::endl;
+    std::cout << "Wow a new client happens with fd : " << this->fd << std::endl;
 }
 
 int Client::getFd()
@@ -25,7 +25,10 @@ void Client::setReq(std::string buffer, size_t bytes)
 
 HTTPRequest * Client::getReq()
 {
-    return this->_req;
+    if (this->_req)
+        return this->_req;
+    else
+        return NULL;
 }
 
 Client::~Client()

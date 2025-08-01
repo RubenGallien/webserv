@@ -50,7 +50,7 @@ int Epoll::actions(int nbs)
 {
     for (int i = 0; i < nbs ; i++)
     {
-        int target_fd =this->_events[i].data.fd;
+        int target_fd = this->_events[i].data.fd;
         if (target_fd == this->_readSignalFd)
             return(0);
         else if (target_fd == this->_socketListenerFd)
@@ -58,21 +58,18 @@ int Epoll::actions(int nbs)
             if (this->epollAccept() == -1)
                 return (0);
         }
-        else // client want tell something
+        else
         {
             switch (this->_ev.events)
             {
                 case EPOLLIN:
-                {
-                    if (!this->_clientManager.manageRequest(target_fd))
+                    if (!this->_clientManager.manageClientRequest(target_fd))
                         epoll_ctl(this->_epfd, EPOLL_CTL_DEL, target_fd, &this->_ev);
                     break;
-                }
                 case EPOLLOUT:
-                    /* code*/
+                        /* code*/
                 default:
                     std::cout << "ni EPOLLIN ni EPOLLOUT" << std::endl;
-                    break;
             }
         }
     }
