@@ -15,9 +15,29 @@ HTTPRequest::HTTPRequest(std::string req, size_t bytes)
 
 int HTTPRequest::hasReadyToPrepare()
 {
-    if(this->_buffer.find("\r\n\r\n") == std::string::npos)
-        return -1;
+    this->_endHeader = this->_buffer.find("\r\n\r\n");
+    if(this->_endHeader == std::string::npos)
+        return 0;
+    this->_contentLength =  this->_buffer.find("Content-Length");
+    this->_transferEncoding = this->_buffer.find("Transfer-Encoding: chunked");
+    if (this->_contentLength == std::string::npos 
+        && this->_transferEncoding == std::string::npos)
+        return 1;
+    if (this->_transferEncoding)
+        this->isChunkedComplete();
+    else if (this->_contentLength)
+        this->isBodyCorrespondLength();
     return 1;
+
+}
+
+void HTTPRequest::isChunkedComplete()
+{
+    size_t pos = this->_endHeader + 4;
+}
+
+void HTTPRequest::isBodyCorrespondLength()
+{
 
 }
 

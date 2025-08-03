@@ -9,6 +9,7 @@ Client::Client(int fd)
 {
     this->fd = fd;
     this->_req = NULL;
+    this->rdyToWrite = 0;
     std::cout << "Wow a new client happens with fd : " << this->fd << std::endl;
 }
 
@@ -29,6 +30,16 @@ HTTPRequest * Client::getReq()
         return this->_req;
     else
         return NULL;
+}
+
+int Client::getRdyToWrite()
+{
+    return this->rdyToWrite;
+}
+
+void Client::setRdyToWrite(int value)
+{
+    this->rdyToWrite = value;
 }
 
 Client::~Client()

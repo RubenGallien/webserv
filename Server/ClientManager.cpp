@@ -22,13 +22,14 @@ void ClientManager::showClients()
 
 int ClientManager::manageClientRequest(int fd)
 {
+    std::cout << "manage ma requete, je suis " << fd << std::endl;
     char buffer[1024];
     int bytes = recv(fd, &buffer, 1024, 0);
     buffer[bytes] = '\0';
 
     if (!bytes)
         return (std::cout << fd << " leave " << std::endl, close(fd), 0);
-    
+
     Client * client = this->getClient(fd);
     HTTPRequest * existingRequest = client->getReq();
     if (!existingRequest)
@@ -38,7 +39,8 @@ int ClientManager::manageClientRequest(int fd)
     }
     else
         existingRequest->extend(buffer, bytes);
-    std::cout << existingRequest->hasReadyToPrepare() << std::endl;
+    if(existingRequest->hasReadyToPrepare())
+        client->setRdyToWrite(1);
     return (1);
 }
 

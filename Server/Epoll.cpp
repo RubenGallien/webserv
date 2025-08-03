@@ -39,6 +39,13 @@ int Epoll::epollAccept()
         std::cout << strerror(errno) << std::endl;
         return -1;
     }
+
+
+    // Afficher l'adresse IP et le port du client
+    char ipStr[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(peer_addr.sin_addr), ipStr, INET_ADDRSTRLEN);
+    std::cout << "Client connecté depuis " << ipStr << ":" << ntohs(peer_addr.sin_port) << std::endl;
+
     this->_ev.events = EPOLLIN;
     this->_ev.data.fd = acceptFd;
     epoll_ctl(this->_epfd, EPOLL_CTL_ADD, acceptFd, &this->_ev);
@@ -60,16 +67,24 @@ int Epoll::actions(int nbs)
         }
         else
         {
-            switch (this->_ev.events)
+            switch (this->_events[i].events)
             {
                 case EPOLLIN:
                     if (!this->_clientManager.manageClientRequest(target_fd))
                         epoll_ctl(this->_epfd, EPOLL_CTL_DEL, target_fd, &this->_ev);
+                    if (this->_clientManager.getClient(target_fd)->getRdyToWrite())
+                    {
+                        this->_ev.events = EPOLLOUT;
+                        epoll_ctl(this->_epfd, EPOLL_CTL_MOD, target_fd, &this->_ev);
+                    }
                     break;
                 case EPOLLOUT:
-                        /* code*/
+                        epoll_ctl(this->_epfd, EPOLL_CTL_DEL, target_fd, &this->_ev);
+                        close(target_fd);
+                        break;
                 default:
                     std::cout << "ni EPOLLIN ni EPOLLOUT" << std::endl;
+                    break;
             }
         }
     }
