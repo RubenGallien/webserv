@@ -1,7 +1,7 @@
 #ifndef SIGNAL_HPP
 #define SIGNAL_HPP
 
-#include "../includes/includes.hpp"
+#include "includes.hpp"
 #include <csignal>
 
 

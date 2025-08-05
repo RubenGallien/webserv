@@ -25,21 +25,49 @@ int HTTPRequest::hasReadyToPrepare()
         return 1;
     if (this->_transferEncoding)
         this->isChunkedComplete();
-    else if (this->_contentLength)
-        this->isBodyCorrespondLength();
-    return 1;
+    // else if (this->_contentLength)
+    //     this->isBodyCorrespondLength();
+    if (this->_transferEncoding || this->_contentLength)
+        return 1;
+    return 0;
 
 }
 
 void HTTPRequest::isChunkedComplete()
 {
     size_t pos = this->_endHeader + 4;
+
+    while (true)
+    {
+        size_t endline = this->_buffer.find("\r\n", pos);
+
+        if (endline == std::string::npos)
+            return;
+
+        std::string lenStr = this->_buffer.substr(pos, endline);
+
+        int len;
+        std::istringstream(lenStr) >> len;
+
+        pos += endline + 2;
+        if (len == 0)
+        {
+            if (this->_buffer.size() >= pos + 2 && this->_buffer.substr(pos, 2) == "\r\n")
+                this->_transferEncoding = 1;
+            return;
+        }
+
+        if (this->_buffer.size() >= (pos + len) + 2 && this->_buffer.substr(pos + len, 2) == "\r\n")
+            pos +=  len + 2;
+        else
+            return;
+    }
 }
 
-void HTTPRequest::isBodyCorrespondLength()
-{
-
-}
+// void HTTPRequest::isBodyCorrespondLength()
+// {
+//     size_t pos = this->_endHeader + 4;
+// }
 
 void HTTPRequest::extend(std::string buffer, size_t bytes)
 {

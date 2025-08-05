@@ -23,7 +23,7 @@ class HTTPRequest
         void extend(std::string buffer, size_t bytes);
         int hasReadyToPrepare();
         void isChunkedComplete();
-        void isBodyCorrespondLength();
+        // void isBodyCorrespondLength();
         std::string getBuffer();
         ~HTTPRequest();
 

@@ -1,4 +1,4 @@
-#include "./ClientManager.hpp"
+#include "ClientManager.hpp"
 
 ClientManager::ClientManager()
 {

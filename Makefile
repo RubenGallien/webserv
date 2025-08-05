@@ -5,9 +5,11 @@ FILES = main.cpp \
 	Server/ClientManager.cpp \
 	Server/HTTPRequest.cpp \
 	Server/Client.cpp \
-	Utils/Signal.cpp
+	Server/Utils/Signal.cpp
 
 VERSION = -std=c++98
+
+INCLUDES = -I includes -I includes/Server -I includes/Server/Utils
 
 CLANG = c++
 
@@ -18,7 +20,7 @@ TARGET = webserv
 DELETE = rm
 
 all:
-	$(CLANG) $(VERSION) $(FLAGS) -o $(TARGET) $(FILES)
+	$(CLANG) $(INCLUDES) $(VERSION) $(FLAGS) -o $(TARGET) $(FILES)
 
 fclean:
 	$(DELETE) $(TARGET)
