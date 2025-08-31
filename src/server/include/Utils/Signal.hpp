@@ -1,9 +1,10 @@
 #ifndef SIGNAL_HPP
 #define SIGNAL_HPP
 
-#include "includes.hpp"
 #include <csignal>
-
+#include <iostream>
+#include <csignal>
+#include <unistd.h>
 
 class Signal {
 	

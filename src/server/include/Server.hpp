@@ -4,20 +4,22 @@
 #include "Socket.hpp"
 #include "Epoll.hpp"
 #include "ClientManager.hpp"
+#include "ServerConf.hpp"
 #include <errno.h>
 #include <unistd.h>
 
 class Server {
 	
 	public:
-		Server(int readSignalFd);
+		Server(int readSignalFd, std::vector<Conf> confs);
 		~Server();
+
 		bool run();
 
 	private:
-		Socket socket;
-		ClientManager clientManager;
-		Epoll epoll;
+		std::vector<Conf>		_confs;
+		std::vector<Socket*>	_sockets;
+		Epoll*					_epoll;
 };
 
 #endif
