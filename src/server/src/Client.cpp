@@ -52,9 +52,19 @@ void Client::startNewRequest()
     this->_requests.push_back(HTTPRequest());
 }
 
+void Client::addRequest(HTTPRequest & request)
+{
+    this->_requests.push_back(request);
+}
+
 HTTPRequest & Client::getRequest()
 {
     return this->_requests.back();
+}
+
+std::vector<HTTPRequest>& Client::getAllRequest()
+{
+    return this->_requests;
 }
 
 Client& Client::operator=(const Client& src)

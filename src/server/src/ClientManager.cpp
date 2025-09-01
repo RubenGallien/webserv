@@ -24,7 +24,9 @@ void ClientManager::addClient(int fd, Socket * socket, std::vector<Conf>* confs)
 void ClientManager::receiveData(int fd)
 {
     char buffer[1024];
-    size_t bytes = recv(fd, &buffer, 1024, 0);
+    ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+    if (bytes <= 0)
+        return;
     buffer[bytes] = '\0';
 
     Client * client = this->getClient(fd);
@@ -36,16 +38,29 @@ void ClientManager::receiveData(int fd)
     //     return;
 
     client->setBuffer(buffer);
-    if (!client->hasRequests() || client->lastRequestComplete())
-        client->startNewRequest();
 
-    HTTPRequestParser::fillRequest(client->getRequest(), client->getBuffer());
+    while (!client->getBuffer().empty())
+    {
+        if (!client->hasRequests() || client->lastRequestComplete())
+            client->startNewRequest();
+        HTTPRequest& req = client->getRequest();
+        HTTPRequestParser::fillRequest(req, client->getBuffer());
 
-    if (client->getRequest().complete == true)
-        exit(0);
+        if (!req.complete)
+            break;
+    }
+    std::vector<HTTPRequest> alls = client->getAllRequest();
+    for (std::vector<HTTPRequest>::iterator it = alls.begin(); it != alls.end(); ++it)
+    {
+        if (it->complete)
+            std::cout << "This request is complete" << std::endl;
+        else
+            std::cout << "This request is not complete" << std::endl;
+    }
 
     return;
 }
+
 
 // int ClientManager::manageClientRequest(int fd)
 // {

@@ -15,7 +15,9 @@ class HTTPRequestParser
     public:
         static void fillRequest(HTTPRequest& request, std::string& buffer);
         static void checkIfComplete(HTTPRequest& request, std::string& buffer);
+        static int hasCompleteRequest(std::string& buffer);
 
 };
+
 
 #endif

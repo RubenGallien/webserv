@@ -16,7 +16,9 @@ struct HTTPRequest
 
     bool                                complete;
     bool                                complete_body;   
-    std::string                         start_line;
+    std::string                         method;
+    std::string                         uri
+    std::string                         protocol;
     std::map<std::string, std::string>  headers;
     std::string                         body;
 

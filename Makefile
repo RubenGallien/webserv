@@ -78,6 +78,7 @@ fclean	:	clean
 	fi
 	make -C src/conf fclean
 	make -C src/server fclean
+	rm -rf ./.vscode
 
 re		:	fclean all
 

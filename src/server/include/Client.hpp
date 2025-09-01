@@ -25,6 +25,7 @@ class Client
         int getFd();
         std::string& getBuffer();
         HTTPRequest & getRequest();
+        std::vector<HTTPRequest>& getAllRequest();
 
 
         // setter
@@ -35,6 +36,7 @@ class Client
         int hasRequests();
         int lastRequestComplete();
         void startNewRequest();
+        void addRequest(HTTPRequest & newRequest);
 
         ~Client();
 

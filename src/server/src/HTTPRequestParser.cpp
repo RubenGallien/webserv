@@ -32,11 +32,8 @@ void addHeaderField(HTTPRequest& request, std::string line)
 void addStartLine(HTTPRequest& request, std::string line)
 {
     std::istringstream ss(line);
-    std::string method;
-    std::string uri;
-    std::string protocol;
-    ss >> method >> uri >> protocol;
-    request.start_line = method + uri + protocol;
+    ss >> request.method >> request.uri >> request.protocol;
+    request.start_line = method + " " + uri + " " + protocol;
 }
 
 int isChunkedComplete(std::string& buffer)
@@ -87,14 +84,20 @@ void HTTPRequestParser::checkIfComplete(HTTPRequest& request, std::string& buffe
     if (it != request.headers.end())
     {
         if (isBodyCorrespondLength(it->second, buffer))
+        {
             request.complete = true;
+            buffer.clear();
+        }
         return;
     }
     it = request.headers.find("transfer-encoding");
     if (it != request.headers.end() && it->second == "chunked")
     {
         if (isChunkedComplete(buffer))
+        {
             request.complete = true;
+            buffer.clear();
+        }
         return;
     }
     request.complete = true;
@@ -102,7 +105,6 @@ void HTTPRequestParser::checkIfComplete(HTTPRequest& request, std::string& buffe
 
 void HTTPRequestParser::fillRequest(HTTPRequest& request, std::string& buffer)
 {
-    std::cout << "Buffer dans fillRequest = " << buffer << "$" << std::endl;
     size_t findLine = buffer.find("\r\n");
     while (!request.complete_body && findLine != std::string::npos)
     {
@@ -110,12 +112,11 @@ void HTTPRequestParser::fillRequest(HTTPRequest& request, std::string& buffer)
         {
             request.complete_body = true;
             buffer.erase(0, 2);
-            std::cout << "FIN DE HEADER DETECTE" << std::endl;
             break;
         }
         size_t colon_pos = buffer.find(":");
         std::string toAdd = buffer.substr(0, findLine);
-        if (colon_pos == std::string::npos)
+        if (colon_pos == std::string::npos || colon_pos > findLine)
             addStartLine(request, toAdd);
         else
             addHeaderField(request, toAdd);
