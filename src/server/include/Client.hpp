@@ -20,6 +20,22 @@ class Client
 
         Client& operator=(const Client& src);
 
+        
+        // getter
+        int getFd();
+        std::string& getBuffer();
+        HTTPRequest & getRequest();
+
+
+        // setter
+        void setConf(Conf & conf);
+        void setBuffer(std::string data);
+
+        // requests
+        int hasRequests();
+        int lastRequestComplete();
+        void startNewRequest();
+
         ~Client();
 
 };

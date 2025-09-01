@@ -15,69 +15,66 @@ void ClientManager::addClient(int fd, Socket * socket, std::vector<Conf>* confs)
         if (it->getHost() == socket->getHost() && it->getPort() == socket->getPort())
         {
             i++;
-            client->_confs.pushBack(*it);
+            client->setConf(*it);
         }
     }
-    std::cout << "I have add " << i << " diff conf : " << std::endl;
     this->_clients[fd] = client;
 }
 
-int ClientManager::manageClientRequest(int fd)
+void ClientManager::receiveData(int fd)
 {
-    std::cout << "manage ma requete, je suis " << fd << std::endl;
     char buffer[1024];
-    int bytes = recv(fd, &buffer, 1024, 0);
+    size_t bytes = recv(fd, &buffer, 1024, 0);
     buffer[bytes] = '\0';
 
-
-    if (!bytes)
-        return (this->_clients.erase(fd), close(fd), 0);
-
     Client * client = this->getClient(fd);
-    HTTPRequest * existingRequest = client->getReq();
-    if (!existingRequest)
-    {
-        client->setReq(buffer, bytes);
-        existingRequest = client->getReq();
-    }
-    else
-        existingRequest->extend(buffer, bytes);
-    size_t initialBytes = existingRequest->getBytes() - bytes;
-    existingRequest->fastParsing(initialBytes);
-    if (existingRequest->responseNow())
-        return (this->responseToClientNow(fd, existingRequest));
-    else if(existingRequest->hasReadyToPrepare())
-        client->setRdyToWrite(1);
-    return (1);
+
+    /*
+    * Client disconnect properly
+    */
+    // if (!bytes)
+    //     return;
+
+    client->setBuffer(buffer);
+    if (!client->hasRequests() || client->lastRequestComplete())
+        client->startNewRequest();
+
+    HTTPRequestParser::fillRequest(client->getRequest(), client->getBuffer());
+
+    if (client->getRequest().complete == true)
+        exit(0);
+
+    return;
 }
 
-int ClientManager::responseToClientNow(int fd, HTTPRequest * existingRequest)
-{
+// int ClientManager::manageClientRequest(int fd)
+// {
+//     std::cout << "manage ma requete, je suis " << fd << std::endl;
+//     char buffer[1024];
+//     int bytes = recv(fd, &buffer, 1024, 0);
+//     buffer[bytes] = '\0';
 
-    std::cout << "Voici ce que je vais repondre au client: \n" << std::endl; 
-    std::string response = existingRequest->getResponse();
 
-    std::cout << response << std::endl;
+//     if (!bytes)
+//         return (this->_clients.erase(fd), close(fd), 0);
 
-    send(fd, response.c_str(), response.size(), 0);
-    std::map<int, Client*>::iterator it = this->_clients.find(fd);
-    if (it != this->_clients.end())
-    {
-        delete it->second;
-        this->_clients.erase(it);
-    }
-    close(fd);
-    return (0);
-}
-
-int ClientManager::sendResponse(int target_fd)
-{
-    Client * client = this->getClient(target_fd);
-    HTTPRequest * existingRequest = client->getReq();
-    std::string response = existingRequest->getResponse();
-    send(target_fd, response.c_str(), response.size(), 0);
-    return 1;
-}
+//     Client * client = this->getClient(fd);
+//     HTTPRequest * existingRequest = client->getReq();
+//     if (!existingRequest)
+//     {
+//         client->setReq(buffer, bytes);
+//         existingRequest = client->getReq();
+//     }
+//     else
+//         existingRequest->extend(buffer, bytes);
+//     size_t initialBytes = existingRequest->getBytes() - bytes;
+//     existingRequest->fastParsing(initialBytes);
+//     if (existingRequest->responseNow())
+//         return (this->responseToClientNow(fd, existingRequest));
+//     else if(existingRequest->hasReadyToPrepare())
+//         client->setRdyToWrite(1);
+//     return (1);
+// }
 
 Client * ClientManager::getClient(int fd)
 {

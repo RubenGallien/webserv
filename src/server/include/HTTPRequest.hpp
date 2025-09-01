@@ -14,7 +14,8 @@ struct HTTPRequest
     HTTPRequest(const HTTPRequest& src);
     HTTPRequest& operator=(const HTTPRequest& other);
 
-    bool                                complete;   
+    bool                                complete;
+    bool                                complete_body;   
     std::string                         start_line;
     std::map<std::string, std::string>  headers;
     std::string                         body;

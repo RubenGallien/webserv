@@ -40,20 +40,11 @@ void Epoll::handleClientEvent(int target_fd, int event)
     {
         case EPOLLIN:
             std::cout << "[EPOLLIN]" << std::endl;
-            if (!this->_clientManager.manageClientRequest(target_fd))
-                epoll_ctl(this->_epfd, EPOLL_CTL_DEL, target_fd, NULL);
-            else if (this->_clientManager.getClient(target_fd)->getRdyToWrite())
-            {
-                struct epoll_event ev;
-                ev.events = EPOLLOUT;
-                ev.data.fd = target_fd;
-                epoll_ctl(this->_epfd, EPOLL_CTL_MOD, target_fd, &ev);
-            }
+            this->_clientManager.receiveData(target_fd);
             break;
         case EPOLLOUT:
             std::cout << "[EPOLLOUT]" << std::endl;
             std::cout << "Je suis pret a recevoir une reponse" << std::endl;
-            this->_clientManager.sendResponse(target_fd);
             exit(0);
             break;
         default:

@@ -25,7 +25,8 @@ SRC			=	Client.cpp \
 				Server.cpp \
 				Socket.cpp \
 				Utils/Signal.cpp \
-				HTTPResponse.cpp \
+				HTTPRequest.cpp \
+				HTTPRequestParser.cpp \
 
 SRC			:=	$(SRC:%=$(SRC_DIR)/%)
 SRC_OBJ		=	$(SRC:%.cpp=$(BUILD_DIR)/%.o)

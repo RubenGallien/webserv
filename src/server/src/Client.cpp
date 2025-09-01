@@ -7,8 +7,8 @@ Client::Client()
 
 Client::Client(int fd)
 {
-    this->fd = fd;
-    std::cout << "Wow a new client happens with fd : " << this->fd << std::endl;
+    this->_fd = fd;
+    std::cout << "Wow a new client happens with fd : " << this->_fd << std::endl;
 }
 
 Client::Client(const Client& other)
@@ -17,6 +17,45 @@ Client::Client(const Client& other)
     return;
 }
 
+int Client::getFd()
+{
+    return this->_fd;
+}
+
+std::string& Client::getBuffer()
+{
+    return this->_buffer;
+}
+
+void Client::setConf(Conf & conf)
+{
+    this->_confs.push_back(conf);
+}
+
+void Client::setBuffer(std::string data)
+{
+    this->_buffer += data;
+}
+
+int Client::hasRequests()
+{
+    return this->_requests.size();
+}
+
+int Client::lastRequestComplete()
+{
+    return this->_requests.back().complete;
+}
+
+void Client::startNewRequest()
+{
+    this->_requests.push_back(HTTPRequest());
+}
+
+HTTPRequest & Client::getRequest()
+{
+    return this->_requests.back();
+}
 
 Client& Client::operator=(const Client& src)
 {

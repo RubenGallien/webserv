@@ -2,12 +2,14 @@
 
 HTTPRequest::HTTPRequest()
 {
+    this->complete = false;
+    this->complete_body = false;
     return;
 }
 
 HTTPRequest::HTTPRequest(const HTTPRequest& src)
 {
-    *this = other;
+    *this = src;
     return;
 }
 
